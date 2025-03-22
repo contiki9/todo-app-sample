@@ -1,28 +1,38 @@
+import { useState } from "react";
 import { Todo } from "./Todo";
+
+// TodoItemの型定義
+export interface TodoItem {
+	id: number;
+	title: string;
+	completed: boolean;
+	priority?: "low" | "medium" | "high";
+	dueDate?: string;
+}
 
 /**
  * モックデータ（後でAPIから取得するデータを想定）
  */
-const mockTodos = [
+const initialTodos: TodoItem[] = [
 	{
 		id: 1,
 		title: "React学習",
 		completed: false,
-		priority: "high" as const,
+		priority: "high",
 		dueDate: "2024-03-25",
 	},
 	{
 		id: 2,
 		title: "買い物リスト作成",
 		completed: true,
-		priority: "medium" as const,
+		priority: "medium",
 		dueDate: "2024-03-23",
 	},
 	{
 		id: 3,
 		title: "部屋の掃除",
 		completed: false,
-		priority: "low" as const,
+		priority: "low",
 	},
 ];
 
@@ -30,6 +40,30 @@ const mockTodos = [
  * Todoリストを表示するコンポーネント
  */
 export const TodoList = () => {
+	// Todoリストの状態管理
+	const [todos, setTodos] = useState<TodoItem[]>(initialTodos);
+
+	// 新規Todoの追加ハンドラ
+	const handleAddTodo = () => {
+		// TODO: 新規Todo追加モーダルの表示などを実装する
+		// TODO: APIと連携して追加・保存する処理を実装する
+		console.log("新規Todoを追加します");
+	};
+
+	// Todo完了状態の切り替えハンドラ
+	const handleToggleComplete = (id: number, completed: boolean) => {
+		// TODO: APIと連携して保存する処理を実装する
+		setTodos(
+			todos.map((todo) => (todo.id === id ? { ...todo, completed } : todo)),
+		);
+	};
+
+	// Todo削除ハンドラ
+	const handleDeleteTodo = (id: number) => {
+		// TODO: APIと連携して削除する処理を実装する
+		setTodos(todos.filter((todo) => todo.id !== id));
+	};
+
 	return (
 		<>
 			<div className="flex justify-between items-center mb-6">
@@ -37,6 +71,7 @@ export const TodoList = () => {
 				<button
 					type="button"
 					className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium shadow-sm transition-all duration-200 flex items-center"
+					onClick={handleAddTodo}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -82,15 +117,20 @@ export const TodoList = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{mockTodos.map((todo) => (
-								<Todo key={todo.id} todo={todo} />
+							{todos.map((todo) => (
+								<Todo
+									key={todo.id}
+									todo={todo}
+									onToggleComplete={handleToggleComplete}
+									onDelete={handleDeleteTodo}
+								/>
 							))}
 						</tbody>
 					</table>
 				</div>
 			</div>
 
-			{mockTodos.length === 0 && (
+			{todos.length === 0 && (
 				<div className="text-center p-8 text-gray-500 bg-white rounded-xl border border-gray-200 shadow-sm mt-4">
 					<svg
 						className="mx-auto h-12 w-12 text-gray-400"

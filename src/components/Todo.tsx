@@ -10,12 +10,14 @@ interface TodoItem {
 
 interface TodoProps {
 	todo: TodoItem;
+	onToggleComplete?: (id: number, completed: boolean) => void;
+	onDelete?: (id: number) => void;
 }
 
 /**
  * 個々のTodoアイテムを表示するコンポーネント
  */
-export const Todo = ({ todo }: TodoProps) => {
+export const Todo = ({ todo, onToggleComplete, onDelete }: TodoProps) => {
 	// 表示用のstate
 	const [isCompleted, setIsCompleted] = useState(todo.completed);
 
@@ -33,6 +35,27 @@ export const Todo = ({ todo }: TodoProps) => {
 		}
 	};
 
+	// チェックボックスの状態変更ハンドラ
+	const handleToggleComplete = () => {
+		// ローカルの状態を更新
+		setIsCompleted(!isCompleted);
+
+		// TODO: APIと連携して保存する処理を実装する
+		// 親コンポーネントから渡された関数があれば実行
+		if (onToggleComplete) {
+			onToggleComplete(todo.id, !isCompleted);
+		}
+	};
+
+	// 削除ボタンのクリックハンドラ
+	const handleDelete = () => {
+		// TODO: APIと連携して削除する処理を実装する
+		// 親コンポーネントから渡された関数があれば実行
+		if (onDelete) {
+			onDelete(todo.id);
+		}
+	};
+
 	const priorityLabel = getPriorityLabel();
 
 	return (
@@ -43,7 +66,7 @@ export const Todo = ({ todo }: TodoProps) => {
 				<input
 					type="checkbox"
 					checked={isCompleted}
-					onChange={() => setIsCompleted(!isCompleted)}
+					onChange={handleToggleComplete}
 					className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
 				/>
 			</td>
@@ -77,6 +100,7 @@ export const Todo = ({ todo }: TodoProps) => {
 					type="button"
 					className="text-gray-400 hover:text-red-500 focus:outline-none hover:scale-110 transition-transform"
 					aria-label="削除"
+					onClick={handleDelete}
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
