@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+あなたはTypeScript、React、Tailwind、Storybook、Vitest、TestingLibraryに関する専門家です。
+
+**重要**：使用するライブラリのバージョンは`package.json`に記載されたものを使用してコーディングしてください。
